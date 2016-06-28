@@ -32,20 +32,6 @@ if ( ! class_exists( 'Jetpack_Contact_Info_Widget' ) ) {
 				$widget_ops
 			);
 			$this->alt_option_name = 'widget_contact_info';
-
-			if ( is_customize_preview() ) {
-				add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-			}
-		}
-
-		/**
-		 * Enqueue scripts and styles.
-		 */
-		public function enqueue_scripts() {
-			wp_enqueue_script( 'jquery' );
-			wp_enqueue_script( 'google-maps', 'https://maps.googleapis.com/maps/api/js?sensor=false' );
-			wp_enqueue_script( 'contact-info-map-js', plugins_url( 'contact-info/contact-info-map.js', __FILE__ ), array( 'jquery', 'google-maps' ), 20150127 );
-			wp_enqueue_style( 'contact-info-map-css', plugins_url( 'contact-info/contact-info-map.css', __FILE__ ), null, 20150127 );
 		}
 
 		/**
@@ -98,11 +84,7 @@ if ( ! class_exists( 'Jetpack_Contact_Info_Widget' ) ) {
 				$showmap = $instance['showmap'];
 
 				if ( $showmap && $this->has_good_map( $instance ) ) {
-
-					$lat = $instance['lat'];
-					$lon = $instance['lon'];
-
-					echo $this->build_map( $lat, $lon );
+					echo $this->build_map( $instance['address'] );
 				}
 
 				$map_link = $this->build_map_link( $instance['address'] );
@@ -278,19 +260,23 @@ if ( ! class_exists( 'Jetpack_Contact_Info_Widget' ) ) {
 		 *
 		 * @return string HTML of the map
 		 */
-		function build_map( $lat, $lon ) {
-			$this->enqueue_scripts();
+		function build_map( $address ) {
+			wp_enqueue_style( 'contact-info-map-css', plugins_url( 'contact-info-map.css', __FILE__ ), null, 20160623 );
 
-			$lat  = esc_attr( $lat );
-			$lon  = esc_attr( $lon );
-			$html = <<<EOT
-				<div class="contact-map">
-				<input type="hidden" class="contact-info-map-lat" value="$lat" />
-				<input type="hidden" class="contact-info-map-lon" value="$lon" />
-				<div class="contact-info-map-canvas"></div></div>
-EOT;
+			$src = add_query_arg( 'q', urlencode( $address ), 'https://www.google.com/maps/embed/v1/place' );
+			/**
+			 * Set a Google Maps API Key.
+			 *
+			 * @since 4.1.0
+			 *
+			 * @param string $key Google Maps API Key
+			 */
+			$key = apply_filters( 'jetpack_google_maps_api_key', constant( 'GOOGLE_MAPS_API_BROWSER_KEY' ) );
+			if ( ! empty( $key ) ) {
+				$src = add_query_arg( 'key', $key, $src );
+			}
 
-			return $html;
+			return '<iframe width="600" height="216" frameborder="0" src="' . esc_url( $src ) . '" class="contact-map"></iframe>';
 		}
 
 		/**
