@@ -32,7 +32,19 @@ if ( ! class_exists( 'Jetpack_Contact_Info_Widget' ) ) {
 				$widget_ops
 			);
 			$this->alt_option_name = 'widget_contact_info';
+
+			if ( is_customize_preview() ) {
+				add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+			}
 		}
+
+		/**
+		 * Enqueue scripts and styles.
+		 */
+		public function enqueue_scripts() {
+			wp_enqueue_style( 'contact-info-map-css', plugins_url( 'contact-info/contact-info-map.css', __FILE__ ), null, 20160623 );
+		}
+
 
 		/**
 		 * Return an associative array of default values
@@ -261,8 +273,7 @@ if ( ! class_exists( 'Jetpack_Contact_Info_Widget' ) ) {
 		 * @return string HTML of the map
 		 */
 		function build_map( $address ) {
-			wp_enqueue_style( 'contact-info-map-css', plugins_url( 'contact-info-map.css', __FILE__ ), null, 20160623 );
-
+			$this->enqueue_scripts();
 			$src = add_query_arg( 'q', urlencode( $address ), 'https://www.google.com/maps/embed/v1/place' );
 			/**
 			 * Set a Google Maps API Key.
