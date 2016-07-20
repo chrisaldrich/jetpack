@@ -106,11 +106,11 @@ class Jetpack_Recipes {
 		global $allowedtags;
 		$allowedtags['li'] = array( 'itemprop' => array () );
 
-		$html = '<div class="hrecipe jetpack-recipe" itemscope itemtype="http://schema.org/Recipe">';
+		$html = '<div class="h-recipe hrecipe jetpack-recipe" itemscope itemtype="http://schema.org/Recipe">';
 
 		// Print the recipe title if exists
 		if ( '' !== $atts['title'] ) {
-			$html .= '<h3 class="jetpack-recipe-title" itemprop="name">' . esc_html( $atts['title'] ) . '</h3>';
+			$html .= '<h3 class="p-name fn jetpack-recipe-title" itemprop="name">' . esc_html( $atts['title'] ) . '</h3>';
 		}
 
 		// Print the recipe meta if exists
@@ -119,7 +119,7 @@ class Jetpack_Recipes {
 
 			if ( '' !== $atts['servings'] ) {
 				$html .= sprintf(
-					'<li class="jetpack-recipe-servings" itemprop="recipeYield"><strong>%1$s: </strong>%2$s</li>',
+					'<li class="p-yield yield jetpack-recipe-servings" itemprop="recipeYield"><strong>%1$s: </strong>%2$s</li>',
 					esc_html_x( 'Servings', 'recipe', 'jetpack' ),
 					esc_html( $atts['servings'] )
 				);
@@ -127,7 +127,7 @@ class Jetpack_Recipes {
 
 			if ( '' !== $atts['time'] ) {
 				$html .= sprintf(
-					'<li class="jetpack-recipe-time" itemprop="totalTime"><strong>%1$s: </strong>%2$s</li>',
+					'<li class="dt-duration duration jetpack-recipe-time" itemprop="totalTime"><strong>%1$s: </strong>%2$s</li>',
 					esc_html_x( 'Time', 'recipe', 'jetpack' ),
 					esc_html( $atts['time'] )
 				);
@@ -154,7 +154,7 @@ class Jetpack_Recipes {
 		// Output the image, if we have one.
 		if ( '' !== $atts['image'] ) {
 			$html .= sprintf(
-				'<img class="jetpack-recipe-image" itemprop="thumbnailUrl" src="%1$s" />',
+				'<img class="u-photo photo jetpack-recipe-image" itemprop="thumbnailUrl" src="%1$s" />',
 				esc_url( $atts['image'] )
 			);
 		}
@@ -162,7 +162,7 @@ class Jetpack_Recipes {
 		// Output the description, if we have one.
 		if ( '' !== $atts['description'] ) {
 			$html .= sprintf(
-				'<p class="jetpack-recipe-description">%1$s</p>',
+				'<p class="p-summary summary jetpack-recipe-description">%1$s</p>',
 				esc_html( $atts['description'] )
 			);
 		}
@@ -228,7 +228,7 @@ class Jetpack_Recipes {
 			'title' => esc_html_x( 'Ingredients', 'recipe', 'jetpack' ), //string
 		), $atts, 'recipe-ingredients' );
 
-		$html = '<div class="jetpack-recipe-ingredients">';
+		$html = '<div class="p-ingredient ingredient jetpack-recipe-ingredients">';
 
 		// Print a title unless the user has opted to exclude it.
 		if ( 'false' !== $atts['title'] ) {
@@ -263,12 +263,12 @@ class Jetpack_Recipes {
 
 		switch ( $type ) {
 			case 'directions' :
-				$list_item_replacement = '<li class="jetpack-recipe-directions">${1}</li>';
+				$list_item_replacement = '<li class="e-instructions instructions jetpack-recipe-directions">${1}</li>';
 				$itemprop              = ' itemprop="recipeInstructions"';
 				$listtype              = 'ol';
 				break;
 			case 'ingredients' :
-				$list_item_replacement = '<li class="jetpack-recipe-ingredient">${1}</li>';
+				$list_item_replacement = '<li class="p-ingredient ingredient jetpack-recipe-ingredient">${1}</li>';
 				$itemprop              = ' itemprop="recipeIngredient"';
 				$listtype              = 'ul';
 				break;
@@ -337,7 +337,7 @@ class Jetpack_Recipes {
 				'title' => esc_html_x( 'Directions', 'recipe', 'jetpack' ), //string
 		), $atts, 'recipe-directions' );
 
-		$html = '<div class="jetpack-recipe-directions">';
+		$html = '<div class="e-instructions instructions jetpack-recipe-directions">';
 
 		// Print a title unless the user has specified to exclude it.
 		if ( 'false' !== $atts['title'] ) {
